@@ -1,7 +1,7 @@
 # https://sqliteviewer.app/#/pennypilot.db/table/income/
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String
 
 # Database connection
@@ -16,5 +16,6 @@ class Income(Base):
     date = Column(String)
     category = Column(String)
 
+Base.metadata.create_all(engine)
 
 
