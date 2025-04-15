@@ -13,7 +13,7 @@ class CreateAccountWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(700, 500, 900, 700)
+        self.setGeometry(720, 450, 900, 700)
         self.setStyleSheet("background-color: white;")
 
 

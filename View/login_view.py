@@ -5,8 +5,12 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont, QCursor
 from PyQt5.QtCore import Qt, pyqtSignal
 import sys
+
+
+
 from create_account_view import CreateAccountWindow
 from forgot_password_view import ForgotPasswordWindow
+from dashboard_view import Dashboard
 
 
 #  Custom Clickable QLabel
@@ -20,7 +24,7 @@ class LoginWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(700, 500, 900, 700)
+        self.setGeometry(720, 450, 900, 700)
         self.setStyleSheet("background-color: white;")
 
 
@@ -92,6 +96,7 @@ class LoginWindow(QWidget):
         self.password_input = QLineEdit(self)
         self.password_input.setPlaceholderText("Password")
         self.password_input.setFixedSize(250, 40)
+        self.password_input.setEchoMode(QLineEdit.Password)
         self.password_input.setStyleSheet("""
                           QLineEdit {
                               border: 1px solid #ccc;
@@ -106,6 +111,7 @@ class LoginWindow(QWidget):
         password_layout.addStretch()
         password_layout.addWidget(self.password_input)
         password_layout.addStretch()
+
 
         # Sign in Button
         sign_in_button = QPushButton("Sign in")
@@ -233,11 +239,51 @@ class LoginWindow(QWidget):
         self.setLayout(main_layout)
 
 
-    def login(self):
-        username = self.lineEdit.text();
-        password = self.lineEdit_2.text();
-        print(password)
 
+
+    def login(self):
+        username = self.username_input.text()
+        password = self.password_input.text()
+
+        if not  username.strip() and not password.strip():
+            msg = QMessageBox(self)
+            msg.setWindowTitle("Missing Fields")
+            msg.setText("Username and Password are required.")
+            msg.setIcon(QMessageBox.Warning)
+
+            # Custom styling
+            msg.setStyleSheet("""
+                        QMessageBox {
+                            background-color: #white;
+                            font-family: Inter;
+                            font-size: 12pt;
+                        }
+                        QLabel {
+                            color: black;
+                        }
+                        QPushButton {
+                            background-color: #White;
+                            border: 1px solid #ccc;
+                            padding: 6px 12px;
+                            border-radius: 6px;
+                            min-width: 80px;
+                        }
+                        QPushButton:hover {
+                            background-color: #e0e0e0;
+                        }
+                    """)
+
+            msg.exec_()
+            return
+
+        if self.auth(password,username):
+            self.open_dashboard_window = Dashboard()
+            self.open_dashboard_window.showFullScreen()
+            self.close()
+
+
+    def auth(self,password,username):
+        return  True
     def open_create_account_window(self):
         self.create_window = CreateAccountWindow()
         self.create_window.show()
