@@ -32,3 +32,14 @@ class ExpenseDAO:
             session.rollback()
             raise e
         finally: session.close()
+
+    def delete_all(self):
+        session = self.session()
+        try:
+            session.query(Expense).delete()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()

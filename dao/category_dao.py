@@ -32,3 +32,14 @@ class CategoryDAO:
             session.rollback()
             raise e
         finally: session.close()
+
+    def delete_all(self):
+        session = self.session()
+        try:
+            session.query(Category).delete()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
