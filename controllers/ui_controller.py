@@ -4,7 +4,7 @@ from dao.account_dao import AccountDAO
 
 
 def authenticate_user(username, password):
-    # Real authentication logic can go here
+
     actual_password = AccountDAO().get_account_by_username(username)
 
     if actual_password == password:
@@ -21,8 +21,8 @@ def show_popup(message):
     msg = QMessageBox()
     msg.setWindowTitle("Pop-up Title")
     msg.setText(message)
-    msg.setIcon(QMessageBox.Information)  # Optional: Set icon (e.g., Information, Warning, Critical)
-    msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)  # Optional: Set buttons
+    msg.setIcon(QMessageBox.Information)
+    msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
     result = msg.exec_()
 
     if result == QMessageBox.Ok:
