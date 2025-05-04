@@ -139,7 +139,7 @@ class ForgotPasswordWindow(QWidget):
         line.setFrameShadow(QFrame.Sunken)
         line.setStyleSheet("background-color: #ccc;")
         line.setFixedHeight(1)
-        line.setFixedWidth(200)  # Fixed width to match your inputs/buttons
+        line.setFixedWidth(200)
 
         # Center it using a layout
         line_layout = QHBoxLayout()

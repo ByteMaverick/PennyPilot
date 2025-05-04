@@ -7,6 +7,9 @@ from PyQt5.QtCore import Qt
 import sys
 
 
+from dao.account_dao import AccountDAO
+import  controllers.ui_controller as ui_controller
+
 
 class CreateAccountWindow(QWidget):
     def __init__(self):
@@ -48,6 +51,25 @@ class CreateAccountWindow(QWidget):
                 line-height: 150%; /* 36px */
                 letter-spacing: -0.24px;""")
 
+        # Name Input
+        self.name_input = QLineEdit(self)
+        self.name_input.setPlaceholderText("Full Name")
+        self.name_input.setFixedSize(250, 40)
+        self.name_input.setStyleSheet("""
+                           QLineEdit {
+                               border: 1px solid #ccc;
+                               border-radius: 8px;
+                               padding: 8px;
+                               font-size: 12pt;
+                               color: black;
+                           }
+                       """)
+
+        name_layout = QHBoxLayout()
+        name_layout.addStretch()
+        name_layout.addWidget(self.name_input)
+        name_layout.addStretch()
+
 
         # Username Input
         self.username_input = QLineEdit(self)
@@ -83,6 +105,8 @@ class CreateAccountWindow(QWidget):
                               color: black;
                           }
                       """)
+
+
 
         password_layout = QHBoxLayout()
         password_layout.addStretch()
@@ -128,6 +152,10 @@ class CreateAccountWindow(QWidget):
                             }
                         """)
 
+
+        create_account_button.clicked.connect(self.createAccount)
+
+
         create_account_layout = QHBoxLayout()
         create_account_layout.addStretch()
         create_account_layout.addWidget(create_account_button)
@@ -170,6 +198,7 @@ class CreateAccountWindow(QWidget):
         main_layout.addWidget(title)
         main_layout.addWidget(signup_label)
         main_layout.addSpacing(10)
+        main_layout.addLayout(name_layout)
         main_layout.addLayout(username_layout)
         main_layout.addLayout(password_layout)
         main_layout.addLayout(retype_password_layout)
@@ -182,9 +211,51 @@ class CreateAccountWindow(QWidget):
 
         self.setLayout(main_layout)
 
+    def login_window(self):
+        from View.login_view import LoginWindow
+        login_window = LoginWindow()
+        login_window.show()
 
-    def login(self):
-        pass
+    def createAccount(self):
+
+        if not self.name_input.text() or not self.username_input.text() or not self.password_input.text() or not self.retype_password_input.text():
+            ui_controller.show_popup("Please fill in all fields")
+            return
+
+        name = self.name_input.text()
+        email = self.username_input.text()
+        password = self.password_input.text()
+        new_account = AccountDAO()
+
+        if new_account.get_account(email) != "notfound":
+            ui_controller.show_popup("Account already exists, please try to sign in.")
+            self.login_window()
+            return
+
+
+        if self.password_input.text() != self.retype_password_input.text():
+            ui_controller.show_popup("Passwords didn't match, Try again.")
+            return
+
+
+        accountCreated =new_account.add_account(name, email, password)
+        if accountCreated:
+            ui_controller.show_popup("Account created successfully.")
+            self.login_window()
+
+
+        else:
+            ui_controller.show_popup("Failed to create account.")
+
+
+
+
+
+
+
+
+
+
 # Run the app
 if __name__ == "__main__":
     app = QApplication(sys.argv)

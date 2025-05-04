@@ -7,10 +7,12 @@ from PyQt5.QtCore import Qt, pyqtSignal
 import sys
 
 
-
-from create_account_view import CreateAccountWindow
+import  controllers.ui_controller as ui_controller
+from controllers.ui_controller import authenticate_user
 from forgot_password_view import ForgotPasswordWindow
 from dashboard_view import Dashboard
+
+
 
 
 #  Custom Clickable QLabel
@@ -283,8 +285,29 @@ class LoginWindow(QWidget):
 
 
     def auth(self,password,username):
-        return  True
+        username = self.username_input.text()
+        password = self.password_input.text()
+
+        if not username.strip() and not password.strip():
+            # QMessageBox warning (same as you already have)
+            ui_controller.show_popup("Acco")
+            return
+
+        auth = authenticate_user(username, password)
+        print(auth)
+        if auth == "True":
+            self.open_dashboard_window = Dashboard()
+            self.open_dashboard_window.showFullScreen()
+            self.close()
+
+        elif auth == "False":
+            ui_controller.show_popup("Account Not Found, Please Create New Account")
+
+        else:
+            ui_controller.show_popup("Password or username is incorrect")
+
     def open_create_account_window(self):
+        from create_account_view import CreateAccountWindow
         self.create_window = CreateAccountWindow()
         self.create_window.show()
         self.close()
