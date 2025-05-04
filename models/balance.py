@@ -11,8 +11,9 @@ Base = declarative_base()
 class Balance(Base):
     __tablename__ = 'balance'
     account_id = Column(Integer, primary_key=True)
-    timestamp = Column(String, primary_key=True)
+    timestamp = Column(String)
     amount = Column(Integer)
+
 
 Base.metadata.create_all(engine)
 

@@ -11,7 +11,7 @@ Base = declarative_base()
 class Category(Base):
     __tablename__ = 'category'
     account_id = Column(Integer, primary_key=True)
-    name = Column(String, primary_key=True)
+    name = Column(String)
 
 Base.metadata.create_all(engine)
 
