@@ -41,7 +41,7 @@ class AccountDAO:
             account = session.query(Account).filter_by(email=username).one()
             return account
         except NoResultFound:
-            return "notfound"  # Or use None or raise a custom exception
+            return "notfound"
         except Exception as e:
             session.rollback()
             raise e
@@ -56,7 +56,7 @@ class AccountDAO:
             account = session.query(Account).filter_by(email=username).one()
             return account.password
         except NoResultFound:
-            return "notfound"  # Or use None or raise a custom exception
+            return "notfound"
         except Exception as e:
             session.rollback()
             raise e
