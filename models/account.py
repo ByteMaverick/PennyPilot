@@ -14,6 +14,7 @@ class Account(Base):
     name = Column(String)
     email = Column(String, primary_key=True)
     password = Column(String)
+    overrideKey = Column(String, unique=True)
 
 Base.metadata.create_all(engine)
 

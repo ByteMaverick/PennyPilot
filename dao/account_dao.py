@@ -11,10 +11,10 @@ class AccountDAO:
         self.session = sessionmaker(bind=self.engine)
 
     # Add new user account to database
-    def add_account(self, name, email, password):
+    def add_account(self, name, email, password, overrideKey):
         session = self.session()
         try:
-            new_account = Account(name=name, email=email, password=password)
+            new_account = Account(name=name, email=email, password=password, overrideKey =overrideKey)
             session.add(new_account)
             session.commit()
             return True
@@ -63,4 +63,16 @@ class AccountDAO:
         finally:
             session.close()
 
+    def get_account_by_password(self, overrideKey):
+        session = self.session()
+        try:
+            account = session.query(Account).filter_by(overrideKey=overrideKey).one()
+            return account.password
+        except NoResultFound:
+            return "notfound"
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
 
