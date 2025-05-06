@@ -107,6 +107,34 @@ def get_all_records():
 
     return df
 
+
+def get_all_incomes():
+    incomes = IncomeDAO().get_all()
+
+    data = [income.__dict__ for income in incomes]
+
+    df = pd.DataFrame(data)
+
+    if "_sa_instance_state" in df.columns:
+        df = df.drop(columns=["_sa_instance_state"])
+
+    return df
+
+def get_all_expenses():
+    expenses = ExpenseDAO().get_all()
+
+    data = [expense.__dict__ for expense in expenses]
+
+    df = pd.DataFrame(data)
+
+    if "_sa_instance_state" in df.columns:
+        df = df.drop(columns=["_sa_instance_state"])
+
+    return df
+
+
+
+
 def get_all_records_view():
     records = BankRecordsDAO().get_all()
 

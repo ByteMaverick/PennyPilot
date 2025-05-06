@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont, QCursor, QIcon, QColor
 from PyQt5.QtCore import Qt
 import sys
-from controllers import ui_controller as ui_controller, import_data, dashboard_controller
+from controllers import ui_controller as ui_controller, import_data, dashboard_controller, visualization
 
 """ 
    main_layout is the entire dashboard  window. We will multiple layout managers inside this layout. Where is a brief overview of the structure:
@@ -467,7 +467,6 @@ class Dashboard(QWidget):
         line-height: 150%; /* 24px */
         """)
 
-
         # Stack container
         self.stack = QStackedWidget(self)
 
@@ -485,7 +484,16 @@ class Dashboard(QWidget):
             line-height: 150%;
         """)
         self.dashboard_layout.addWidget(subtitle)
+
+        # Generate histogram for total income by week
+        self.dashboard_layout.addWidget(visualization.histogram_income_by_week())
+        # Generate histogram for total expenses by week
+        self.dashboard_layout.addWidget(visualization.histogram_expenses_by_week())
+
+
+
         self.dashboard_layout.addWidget(dashboard_subtitle)
+
 
         dashboard_widget = QWidget()
         dashboard_widget.setLayout(self.dashboard_layout)

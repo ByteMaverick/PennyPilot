@@ -33,6 +33,20 @@ class ExpenseDAO:
             raise e
         finally: session.close()
 
+
+    # Retrieve all expenses
+    def get_all(self):
+        session = self.session()
+        try:
+            expenses = session.query(Expense).all()
+            return expenses
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+
     def delete_all(self):
         session = self.session()
         try:

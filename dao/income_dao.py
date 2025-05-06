@@ -33,6 +33,16 @@ class IncomeDAO:
             raise e
         finally: session.close()
 
+    def get_all(self):
+        session = self.session()
+        try:
+            incomes = session.query(Income).all()
+            return incomes
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally: session.close()
+
     def delete_all(self):
         session = self.session()
         try:
