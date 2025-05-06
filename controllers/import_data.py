@@ -159,7 +159,7 @@ def import_bank_statement(clear_existing=False):
             table_start_index = lines.index(data)
 
     for data in lines[table_start_index:]:
-        # Got the pattern from chatgpt, was having a hard time doing to my own
+
         pattern = r"(\d{1,2}/\d{1,2}/\d{2,4})\s+(.+?)\s+(?:([\d,]+\.\d{2})\s+-\s+)?(?:-?\s*([\d,]+\.\d{2})\s+)?([\d,]+\.\d{2})"
         data = data.replace(",", "")
         match = re.match(pattern, data)
@@ -182,10 +182,10 @@ def check_csv_structure(file, isCSV=True):
     if isCSV:
         df = pd.read_csv(file)
 
-    if df.shape[1] != 5:  # Shape[0] is rows, you likely meant columns
+    if df.shape[1] != 5:
         return ui_controller.show_popup("Incompatible CSV Shape!")
 
-    cols = [col.strip().lower() for col in df.columns.tolist()]  # fix: convert list of strings to lowercase
+    cols = [col.strip().lower() for col in df.columns.tolist()]
 
     if cols[0] != "date":
         return ui_controller.show_popup("Incompatible CSV Shape!")
