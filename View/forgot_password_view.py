@@ -6,6 +6,7 @@ from PyQt5.QtGui import QFont, QCursor
 from PyQt5.QtCore import Qt
 import sys
 
+from controllers import ui_controller
 
 
 class ForgotPasswordWindow(QWidget):
@@ -36,7 +37,7 @@ class ForgotPasswordWindow(QWidget):
             """)
 
         # Sign Up Label
-        signup_label = QLabel("Sign Up with PennyPilot")
+        signup_label = QLabel("Forgot Password")
         signup_label.setAlignment(Qt.AlignCenter)
         signup_label.setStyleSheet("""
                 color: #000;
@@ -68,50 +69,30 @@ class ForgotPasswordWindow(QWidget):
         username_layout.addWidget(self.username_input)
         username_layout.addStretch()
 
+        # Password Override Key
+        self.key_input = QLineEdit(self)
+        self.key_input.setPlaceholderText("Override Key")
+        self.key_input.setFixedSize(250, 40)
+        self.key_input.setStyleSheet(""" QLineEdit {
+                       border: 1px solid #ccc;
+                       border-radius: 8px;
+                       padding: 8px;
+                       font-size: 12pt;
+                       color: black;
+                   }""")
+
+        key_layout = QHBoxLayout()
+        key_layout.addStretch()
+        key_layout.addWidget(self.key_input)
+        key_layout.addStretch()
 
 
-        # Password Input
-        self.password_input = QLineEdit(self)
-        self.password_input.setPlaceholderText("Password")
-        self.password_input.setFixedSize(250, 40)
-        self.password_input.setStyleSheet("""
-                          QLineEdit {
-                              border: 1px solid #ccc;
-                              border-radius: 8px;
-                              padding: 8px;
-                              font-size: 12pt;
-                              color: black;
-                          }
-                      """)
 
-        password_layout = QHBoxLayout()
-        password_layout.addStretch()
-        password_layout.addWidget(self.password_input)
-        password_layout.addStretch()
-
-        # Password Input
-        self.retype_password_input = QLineEdit(self)
-        self.retype_password_input.setPlaceholderText("Re-Type Password")
-        self.retype_password_input.setFixedSize(250, 40)
-        self.retype_password_input.setStyleSheet("""
-                                  QLineEdit {
-                                      border: 1px solid #ccc;
-                                      border-radius: 8px;
-                                      padding: 8px;
-                                      font-size: 12pt;
-                                      color: black;
-                                  }
-                              """)
-
-        retype_password_layout = QHBoxLayout()
-        retype_password_layout.addStretch()
-        retype_password_layout.addWidget(self.retype_password_input)
-        retype_password_layout.addStretch()
 
 
 
         # Create Account Button
-        create_account_button = QPushButton("Create Account")
+        create_account_button = QPushButton("Retrieve Password")
         create_account_button.setCursor(QCursor(Qt.PointingHandCursor))
         create_account_button.setFixedSize(250, 40)
         create_account_button.setStyleSheet("""
@@ -133,6 +114,7 @@ class ForgotPasswordWindow(QWidget):
         create_account_layout.addWidget(create_account_button)
         create_account_layout.addStretch()
 
+        create_account_button.clicked.connect(self.AuthKey)
         # Line
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
@@ -149,7 +131,7 @@ class ForgotPasswordWindow(QWidget):
 
         # Footer
         # Terms and Conditions
-        terms_label = QLabel("By clicking continue, you agree to our Terms of Service and Privacy Policy")
+        terms_label = QLabel("Trade marker")
         terms_label.setWordWrap(True)
         terms_label.setAlignment(Qt.AlignCenter)
         terms_label.setStyleSheet("""
@@ -161,7 +143,7 @@ class ForgotPasswordWindow(QWidget):
             line-height: 150%;
         """)
         terms_label.setText(
-            'By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.'
+            'PennyPilot — Track your income, expenses, and spending habits.\n© 2025 Mohammed & Alex. \nAll rights reserved.'
         )
         terms_label.setOpenExternalLinks(True)
 
@@ -171,8 +153,7 @@ class ForgotPasswordWindow(QWidget):
         main_layout.addWidget(signup_label)
         main_layout.addSpacing(10)
         main_layout.addLayout(username_layout)
-        main_layout.addLayout(password_layout)
-        main_layout.addLayout(retype_password_layout)
+        main_layout.addLayout(key_layout)
         main_layout.addLayout(create_account_layout)
 
         main_layout.addLayout(line_layout)
@@ -183,8 +164,11 @@ class ForgotPasswordWindow(QWidget):
         self.setLayout(main_layout)
 
 
-    def login(self):
-        pass
+    def AuthKey(self):
+        key = self.key_input.text()
+        return ui_controller.retrieve_password(key)
+
+
 # Run the app
 if __name__ == "__main__":
     app = QApplication(sys.argv)
