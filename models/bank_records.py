@@ -9,7 +9,9 @@ engine = create_engine("sqlite:///../pennypilot.db")
 Base = declarative_base()
 
 class BankRecords(Base):
-
+    """
+    BankRecords model for SQLite database.
+    """
     __tablename__ = 'bank_records'
 
     id = Column(Integer, primary_key=True)  # Auto-increment ID
@@ -21,6 +23,7 @@ class BankRecords(Base):
     balance = Column(Float)            # Final balance after transaction
     category = Column(String)
 
+# Create bank_records table in SQLite database.
 Base.metadata.create_all(engine)
 
 
