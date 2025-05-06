@@ -1,17 +1,27 @@
 import pandas as pd
 from transformers import pipeline
 
+from controllers import ui_controller
 
-def generate_categories(csvPath):
+
+def generate_categories(file, csv = True, load_popup =False ):
     # Initialize zero-shot classification pipeline (using PyTorch)
+    # Compared facebook/bart-large-mnli and cross-encoder/nli-distilroberta-base nlp model
+    # FInal app is using  since it is faster cross-encoder/nli-distilroberta-base
+
+    if load_popup:
+        loading = ui_controller.show_loading_message()
     classifier = pipeline(
         "zero-shot-classification",
-        model="facebook/bart-large-mnli",
+        model="cross-encoder/nli-distilroberta-base",
         framework="pt"
     )
-
-    # Load CSV
-    df = pd.read_csv(csvPath)  #
+    df = pd.DataFrame()
+    if csv:
+        # Load CSV
+        df = pd.read_csv(file)  #
+    else :
+        df =file
 
 
     candidate_labels = ["Food", "Transport", "Shopping", "Entertainment", "Bills", "Salary", "Healthcare", "Education","Other"]
@@ -26,6 +36,7 @@ def generate_categories(csvPath):
     # Add predictions to the DataFrame
     df['category'] = results
 
+    loading.close()
     return df
 
 
