@@ -10,10 +10,10 @@ class BalanceDAO:
         self.session = sessionmaker(bind=self.engine)
 
     # Add updated balance for a user
-    def add_balance(self, account_id, timestamp, amount):
+    def add_balance(self, account_id, date, amount):
         session = self.session()
         try:
-            new_balance = Balance(account_id = account_id, timestamp = timestamp, amount = amount)
+            new_balance = Balance(account_id = account_id, date = date, amount = amount)
             session.add(new_balance)
             session.commit()
         except Exception as e:
