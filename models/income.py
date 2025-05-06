@@ -9,6 +9,9 @@ engine = create_engine("sqlite:///../pennypilot.db")
 Base = declarative_base()
 
 class Income(Base):
+    """
+    Income model for SQLite database.
+    """
     __tablename__ = 'income'
     income_id = Column(Integer, primary_key=True)
     account_id = Column(Integer)
@@ -16,6 +19,7 @@ class Income(Base):
     date = Column(String)
     category = Column(String)
 
+# Create income table in SQLite database.
 Base.metadata.create_all(engine)
 
 

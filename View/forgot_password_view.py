@@ -10,6 +10,9 @@ from controllers import ui_controller
 
 
 class ForgotPasswordWindow(QWidget):
+    """
+    QWidget for Forgot Password View.
+    """
     def __init__(self):
         super().__init__()
 
@@ -147,7 +150,7 @@ class ForgotPasswordWindow(QWidget):
                                                 background-color: #e0e0e0;
                                             }
                                         """)
-        back_to_login_button.clicked.connect(self.login_window)
+        back_to_login_button.clicked.connect(self.open_login_window)
 
         back_to_login_layout = QHBoxLayout()
         back_to_login_layout.addStretch()
@@ -192,7 +195,11 @@ class ForgotPasswordWindow(QWidget):
         self.setLayout(main_layout)
 
 
-    def login_window(self):
+    def open_login_window(self):
+        """
+        Open Login Window.
+        :return: None.
+        """
         from View.login_view import LoginWindow
         self.login_window = LoginWindow()
         self.login_window.show()
@@ -200,10 +207,15 @@ class ForgotPasswordWindow(QWidget):
 
 
     def AuthKey(self):
+        """
+        Check if key is valid.
+        :return: None.
+        """
         key = self.key_input.text()
         valid = ui_controller.retrieve_password(key)
+        # Go back to login window after user retrieves password
         if (valid == "True") :
-            self.login_window()
+            self.open_login_window()
 
 
 # Run the app

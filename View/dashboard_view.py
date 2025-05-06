@@ -8,21 +8,23 @@ from PyQt5.QtCore import Qt
 import sys
 from controllers import ui_controller as ui_controller, import_data, dashboard_controller, visualization
 
-""" 
-   main_layout is the entire dashboard  window. We will multiple layout managers inside this layout. Where is a brief overview of the structure:
-   
-   - Header(QHBoxLayout()) = contains Logo, and two drop down menus. First is the three dots menu and the import menu
-   - view_change_layout(QHBoxLayout()) = contains the buttons that changes main panel view(Graphs or Transactions) and the search bar 
-   - money_tracking_layout(QHBoxLayout()) = contains three   panels which display the money tracking info
-      -  current_balance_layout(QVBoxLayout()) = contains balance  info
-      -  monthly_spending_layout(QVBoxLayout()) = contains monthly spending info
-      -  monthly_income_layout = contains monthly income info
-   - dashboard_layout (Stacked with transaction_layout) = Contains all the graphs(TO-DO)
-   - transaction_layout(Stacked with dashboard_layout) = Display all the records 
-      
-    """
+
 
 class Dashboard(QWidget):
+    """
+    QWidget for Dashboard View.
+       main_layout is the entire dashboard  window. We will use multiple layout managers inside this layout. Where is a brief overview of the structure:
+
+       - Header(QHBoxLayout()) = contains Logo, and two drop down menus. First is the three dots menu and the import menu
+       - view_change_layout(QHBoxLayout()) = contains the buttons that changes main panel view(Graphs or Transactions) and the search bar
+       - money_tracking_layout(QHBoxLayout()) = contains three   panels which display the money tracking info
+          -  current_balance_layout(QVBoxLayout()) = contains balance  info
+          -  monthly_spending_layout(QVBoxLayout()) = contains monthly spending info
+          -  monthly_income_layout = contains monthly income info
+       - dashboard_layout (Stacked with transaction_layout) = Contains all the graphs
+       - transaction_layout(Stacked with dashboard_layout) = Display all the records
+
+        """
     def __init__(self, email=None, number=None):
         super().__init__()
         self.email = email
@@ -89,7 +91,7 @@ class Dashboard(QWidget):
         # Create the dropdown menu for extra stuff
         menu = QMenu()
         profiles_button = menu.addAction("Profiles")
-        profiles_button.triggered.connect(self.profile_window)
+        profiles_button.triggered.connect(self.open_profile_window)
         log_out_button = menu.addAction("Log out")
         log_out_button.triggered.connect(self.log_out)
         about_button = menu.addAction("About")
@@ -538,6 +540,10 @@ class Dashboard(QWidget):
 # Method Logic
 
     def switch_panel(self):
+        """
+        Switch panel between transaction view and dashboard view.
+        :return: None.
+        """
         # Switch colors of dashboard and transaction button
         temp_transaction_style = self.transaction_view_button.styleSheet()
         self.transaction_view_button.setStyleSheet(self.dashboard_view_button.styleSheet())
@@ -551,8 +557,13 @@ class Dashboard(QWidget):
         self.show_table(data)
         self.stack.setCurrentIndex(next_index)
 
-    # Review This
+
     def show_table(self, df):
+        """
+        Show table using DataFrame.
+        :param df: DataFrame to be converted into a table.
+        :return: None.
+        """
         self.table.clear()
         self.table.setRowCount(df.shape[0])
         self.table.setColumnCount(df.shape[1])
@@ -582,8 +593,14 @@ class Dashboard(QWidget):
                 item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.table.setItem(i, j, item)
 
-    # Review this
+
+
     def filter_table(self, text):
+        """
+        Filter table using text.
+        :param text: Text input from user.
+        :return: None.
+        """
         if not hasattr(self, 'original_df'):
             return
 
@@ -594,6 +611,10 @@ class Dashboard(QWidget):
 
 
     def refresh_dashboard(self):
+        """
+        Refresh dashboard text and labels.
+        :return: None.
+        """
         self.current_balance_label.setText(f"$ {dashboard_controller.current_balance(): 0.2f}")
         self.current_balance_desc_label.setText(dashboard_controller.balance_compared_last_month())
 
@@ -607,6 +628,11 @@ class Dashboard(QWidget):
 
 
     def import_data(self, isCSV = True ):
+        """
+        Import data from file.
+        :param isCSV: Boolean, whether file is CSV.
+        :return: None.
+        """
         loading = ui_controller.show_loading_message()
         QApplication.processEvents()
         # Clear DB only on first import
@@ -624,7 +650,12 @@ class Dashboard(QWidget):
         self.show_table(data)
         self.refresh_dashboard()
 
+
     def clean_all(self):
+        """
+        Clears all existing financial data from database.
+        :return:
+        """
         from dao.bankrecords_dao import BankRecordsDAO
         from dao.balance_dao import BalanceDAO
         from dao.expense_dao import ExpenseDAO
@@ -637,13 +668,21 @@ class Dashboard(QWidget):
         IncomeDAO().delete_all()
         CategoryDAO().delete_all()
 
-    def profile_window(self):
+    def open_profile_window(self):
+        """
+        Open profile window.
+        :return: None.
+        """
         from View.profile_view import ProfileWindow
         self.profile_window = ProfileWindow(email=self.email)
         self.profile_window.show()
         self.close()
 
     def log_out(self):
+        """
+        Log out and go to login window.
+        :return: None.
+        """
         from login_view import LoginWindow
         self.create_window = LoginWindow()
         self.create_window.show()
