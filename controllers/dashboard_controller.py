@@ -19,14 +19,14 @@ def get_monthly_total_by_type(transaction_type):
     }
 
     df = get_all_records()
-    latest_timestamp = df["timestamp"].iloc[-1]
+    latest_timestamp = df["date"].iloc[-1]
     current_month_num = month_extractor(latest_timestamp)
     current_month_name = months_dict[current_month_num]
 
     total_amount = 0
 
     for row in df.itertuples():
-        if month_extractor(row.timestamp) == current_month_num:
+        if month_extractor(row.date) == current_month_num:
             total_amount += getattr(row, transaction_type)
 
     return current_month_name, total_amount, current_month_num
@@ -41,7 +41,7 @@ def money_spent_compared_last_month():
     last_month_num = str(int(current_month_num) - 1).zfill(2)
 
     for row in df.itertuples():
-        if month_extractor(row.timestamp) == last_month_num:
+        if month_extractor(row.date) == last_month_num:
             last_month_spent += row.debit
 
     difference = current_month_spent - last_month_spent
@@ -70,7 +70,7 @@ def balance_compared_last_month():
     last_month_num = str(int(current_month_num) - 1).zfill(2)
 
     for row in df.itertuples():
-        if month_extractor(row.timestamp) == last_month_num:
+        if month_extractor(row.date) == last_month_num:
             balance_last_month += row.balance
             count = count + 1
 
@@ -99,7 +99,7 @@ def money_made_compared_last_month():
     last_month_num = str(int(current_month_num) - 1).zfill(2)
 
     for row in df.itertuples():
-        if month_extractor(row.timestamp) == last_month_num:
+        if month_extractor(row.date) == last_month_num:
             last_month_income += row.credit
 
     difference = current_month_income - last_month_income
