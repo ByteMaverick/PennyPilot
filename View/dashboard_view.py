@@ -23,8 +23,10 @@ from controllers import ui_controller as ui_controller, import_data, dashboard_c
     """
 
 class Dashboard(QWidget):
-    def __init__(self):
+    def __init__(self, email=None, number=None):
         super().__init__()
+        self.email = email
+        self.number = number
 
         self.clean_all()
         self.setWindowTitle("PennyPilot")
@@ -86,7 +88,8 @@ class Dashboard(QWidget):
                                     }""")
         # Create the dropdown menu for extra stuff
         menu = QMenu()
-        profiles_button =menu.addAction("Profiles")
+        profiles_button = menu.addAction("Profiles")
+        profiles_button.triggered.connect(self.profile_window)
         log_out_button = menu.addAction("Log out")
         log_out_button.triggered.connect(self.log_out)
         about_button = menu.addAction("About")
@@ -172,10 +175,10 @@ class Dashboard(QWidget):
         view_change_layout = QHBoxLayout()
         view_change_layout.setAlignment(Qt.AlignLeft)
 
-        dashboard_view_button = QPushButton("Dashboard")
-        dashboard_view_button.setCursor(QCursor(Qt.PointingHandCursor))
-        dashboard_view_button.setFixedSize(84,24)
-        dashboard_view_button.setStyleSheet("""
+        self.dashboard_view_button = QPushButton("Dashboard")
+        self.dashboard_view_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.dashboard_view_button.setFixedSize(84,24)
+        self.dashboard_view_button.setStyleSheet("""
                                 QPushButton {
                                         border-radius: 12px;
                                         background: black;
@@ -191,14 +194,14 @@ class Dashboard(QWidget):
         
                             """)
 
-        dashboard_view_button.clicked.connect(self.switch_panel)
+        self.dashboard_view_button.clicked.connect(self.switch_panel)
 
 
 
-        transaction_view_button = QPushButton("Transaction")
-        transaction_view_button.setCursor(QCursor(Qt.PointingHandCursor))
-        transaction_view_button.setFixedSize(84, 24)
-        transaction_view_button.setStyleSheet("""
+        self.transaction_view_button = QPushButton("Transaction")
+        self.transaction_view_button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.transaction_view_button.setFixedSize(84, 24)
+        self.transaction_view_button.setStyleSheet("""
                                        QPushButton {
                                                border-radius: 12px;
                                                background: #EEE;
@@ -214,7 +217,7 @@ class Dashboard(QWidget):
 
                                    """)
 
-        transaction_view_button.clicked.connect(self.switch_panel)
+        self.transaction_view_button.clicked.connect(self.switch_panel)
 
 
 
@@ -241,8 +244,8 @@ class Dashboard(QWidget):
 
 
         # Adding all the widgets to the  view_change_layout(Panel 2)
-        view_change_layout.addWidget(dashboard_view_button)
-        view_change_layout.addWidget(transaction_view_button)
+        view_change_layout.addWidget(self.dashboard_view_button)
+        view_change_layout.addWidget(self.transaction_view_button)
         view_change_layout.addStretch()
         view_change_layout.addWidget(self.search_transaction)
 
@@ -281,7 +284,8 @@ class Dashboard(QWidget):
         """)
 
         self.has_imported_once = False
-        import_data.import_file(dev=True)  # Load the sample.csv when the app starts
+        # Turn off dev
+        import_data.import_file(dev=False)  # Load the sample.csv when the app starts
 
         self.current_balance_label = QLabel(f"$ {dashboard_controller.current_balance(): 0.2f}")
         self.current_balance_label.setAlignment(Qt.AlignLeft)
@@ -526,6 +530,11 @@ class Dashboard(QWidget):
 # Method Logic
 
     def switch_panel(self):
+        # Switch colors of dashboard and transaction button
+        temp_transaction_style = self.transaction_view_button.styleSheet()
+        self.transaction_view_button.setStyleSheet(self.dashboard_view_button.styleSheet())
+        self.dashboard_view_button.setStyleSheet(temp_transaction_style)
+
         current_index = self.stack.currentIndex()
         next_index = 1 if current_index == 0 else 0
         data = import_data.get_all_records_view()
@@ -619,6 +628,12 @@ class Dashboard(QWidget):
         ExpenseDAO().delete_all()
         IncomeDAO().delete_all()
         CategoryDAO().delete_all()
+
+    def profile_window(self):
+        from View.profile_view import ProfileWindow
+        self.profile_window = ProfileWindow(email=self.email)
+        self.profile_window.show()
+        self.close()
 
     def log_out(self):
         from login_view import LoginWindow

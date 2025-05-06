@@ -12,6 +12,7 @@ from controllers.ui_controller import authenticate_user
 from create_account_view import CreateAccountWindow
 from forgot_password_view import ForgotPasswordWindow
 from dashboard_view import Dashboard
+from profile_view import ProfileWindow
 
 
 
@@ -297,10 +298,19 @@ class LoginWindow(QWidget):
         print(auth)
         # Password matches
         if auth == "True":
-            self.open_dashboard_window = Dashboard()
-            self.open_dashboard_window.showFullScreen()
-            loading.close()
-            self.close()
+
+            try:
+                self.open_profile_window = ProfileWindow(email=username)
+                self.open_profile_window.show()
+                # self.open_dashboard_window = Dashboard()
+                # self.open_dashboard_window.showFullScreen()
+            except Exception as e:
+                # print(f"Error while opening dashboard: {e}")
+                print(f"Error while opening profiles: {e}")
+            finally:
+                loading.close()
+                self.close()
+
         # Password does not match
         elif auth == "False":
             ui_controller.show_popup("Password is incorrect")
