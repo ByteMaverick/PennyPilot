@@ -10,11 +10,11 @@ class BankRecordsDAO:
         self.session = sessionmaker(bind=self.engine)
 
     # Add updated balance for a user
-    def  add_record(self, id,timestamp, description, credit,debit, actionId,balance,category):
+    def  add_record(self, id,date, description, credit,debit, actionId,balance,category):
 
         session = self.session()
         try:
-            new_record = BankRecords(id= id, timestamp = timestamp, description = description, credit =credit, debit = debit, actionId = actionId, balance = balance, category = category  )
+            new_record = BankRecords(id= id, date = date, description = description, credit =credit, debit = debit, actionId = actionId, balance = balance, category = category  )
             session.add(new_record)
             session.commit()
         except Exception as e:

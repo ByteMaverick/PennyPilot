@@ -13,7 +13,7 @@ class BankRecords(Base):
     __tablename__ = 'bank_records'
 
     id = Column(Integer, primary_key=True)  # Auto-increment ID
-    timestamp = Column(String)         # e.g., "2025-04-01 12:30"
+    date = Column(String)         # e.g., "2025-04-01 12:30"
     description = Column(String)       # e.g., "Lunch at Subway"
     credit = Column(Float)             # Positive amount (or NULL)
     debit = Column(Float)              # Positive amount (or NULL)
