@@ -32,6 +32,7 @@ class Dashboard(QWidget):
         self.setStyleSheet("background-color: white;")
 
 
+
         main_layout = QVBoxLayout()
 
 
@@ -136,7 +137,9 @@ class Dashboard(QWidget):
         # Create the dropdown menu
         import_menu = QMenu()
         import_menu_action =import_menu.addAction("Import CSV")
-        import_menu_action.triggered.connect(self.import_csv)
+        import_pdf_button = import_menu.addAction("Import PDF")
+        import_menu_action.triggered.connect(lambda: self.import_data(True))
+        import_pdf_button.triggered.connect(lambda: self.import_data(False))
         import_menu.setStyleSheet("""
                             QMenu {
                                 background-color: white;
@@ -536,7 +539,12 @@ class Dashboard(QWidget):
         self.table.clear()
         self.table.setRowCount(df.shape[0])
         self.table.setColumnCount(df.shape[1])
-        self.table.setHorizontalHeaderLabels(df.columns)  # ← This line sets the column names
+        columns = ["Date", "Description", "Category", "Credit", "Debit","Balance"]
+
+        font = QFont()
+        font.setBold(True)
+        self.table.horizontalHeader().setFont(font)
+        self.table.setHorizontalHeaderLabels(columns)
 
         self.table.resizeColumnsToContents()
         self.table.setStyleSheet("""
@@ -581,11 +589,17 @@ class Dashboard(QWidget):
         self.income_desc_label.setText(dashboard_controller.money_made_compared_last_month())
 
 
-    def import_csv(self):
+    def import_data(self, isCSV = True ):
+        loading = ui_controller.show_loading_message()
+        QApplication.processEvents()
         # Clear DB only on first import
         clear_existing = not self.has_imported_once
-        import_data.import_file(clear_existing=clear_existing)
+        if isCSV:
+            import_data.import_file(clear_existing=clear_existing)
+        else:
+            import_data.import_bank_statement(clear_existing=clear_existing)
         self.has_imported_once = True
+        loading.close()
 
         # Refresh table
         data = import_data.get_all_records_view()
