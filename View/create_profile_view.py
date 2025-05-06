@@ -11,6 +11,9 @@ import  controllers.ui_controller as ui_controller
 
 
 class CreateProfileWindow(QWidget):
+    """
+    QWidget for Create Profile View.
+    """
     def __init__(self, email, number):
         super().__init__()
         self.email = email
@@ -131,7 +134,7 @@ class CreateProfileWindow(QWidget):
                                         background-color: #e0e0e0;
                                     }
                                 """)
-        back_to_profile_button.clicked.connect(self.profile_window)
+        back_to_profile_button.clicked.connect(self.open_profile_window)
 
         back_to_profile_layout = QHBoxLayout()
         back_to_profile_layout.addStretch()
@@ -176,7 +179,11 @@ class CreateProfileWindow(QWidget):
 
 
 
-    def profile_window(self):
+    def open_profile_window(self):
+        """
+        Open Profile Window.
+        :return: None.
+        """
         from View.profile_view import ProfileWindow
         self.profile_window = ProfileWindow(email=self.email)
         self.profile_window.show()
@@ -185,7 +192,10 @@ class CreateProfileWindow(QWidget):
 
 
     def createProfile(self):
-
+        """
+        Create profile.
+        :return: None.
+        """
         if not self.name_input.text():
             ui_controller.show_popup(f"Please enter name of new profile {self.number}")
             return
@@ -198,14 +208,10 @@ class CreateProfileWindow(QWidget):
         profileCreated = new_profile.add_profile(self.email, self.number, name)
         if profileCreated:
             ui_controller.show_popup(f"New Profile {self.number} called {name} created successfully.")
-            self.profile_window()
+            self.open_profile_window()
 
         else:
             ui_controller.show_popup(f"Failed to create profile {self.number}.")
-
-
-
-
 
 
 

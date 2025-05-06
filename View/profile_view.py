@@ -20,7 +20,9 @@ class ClickableLabel(QLabel):
         self.clicked.emit()
 
 class ProfileWindow(QWidget):
-
+    """
+    QWidget for Profile View.
+    """
     def __init__(self, email=None):
         super().__init__()
 
@@ -188,7 +190,7 @@ class ProfileWindow(QWidget):
                                                 background-color: #e0e0e0;
                                             }
                                         """)
-        log_out_button.clicked.connect(self.login_window)
+        log_out_button.clicked.connect(self.open_login_window)
 
         log_out_layout = QHBoxLayout()
         log_out_layout.addStretch()
@@ -234,7 +236,12 @@ class ProfileWindow(QWidget):
         self.setLayout(main_layout)
 
 
-    def create_profile_window(self, number):
+    def open_create_profile_window(self, number):
+        """
+        Open create profile window.
+        :param number: Profile number.
+        :return: None.
+        """
         from View.create_profile_view import CreateProfileWindow
         self.create_profile_window = CreateProfileWindow(self.email, number)
         self.create_profile_window.show()
@@ -242,8 +249,12 @@ class ProfileWindow(QWidget):
 
 
     def openProfileOne(self):
+        """
+        Open profile 1.
+        :return: None.
+        """
         if retrieve_profile(self.email, 1) == "Create New Profile 1":
-            self.create_profile_window(1)
+            self.open_create_profile_window(1)
 
         else:
             loading = ui_controller.show_loading_message()
@@ -262,8 +273,12 @@ class ProfileWindow(QWidget):
 
 
     def openProfileTwo(self):
+        """
+        Open profile 2.
+        :return: None.
+        """
         if retrieve_profile(self.email, 2) == "Create New Profile 2":
-            self.create_profile_window(2)
+            self.open_create_profile_window(2)
 
         else:
             loading = ui_controller.show_loading_message()
@@ -281,8 +296,12 @@ class ProfileWindow(QWidget):
 
 
     def openProfileThree(self):
+        """
+        Open profile 3.
+        :return: None.
+        """
         if retrieve_profile(self.email, 3) == "Create New Profile 3":
-            self.create_profile_window(3)
+            self.open_create_profile_window(3)
 
         else:
             loading = ui_controller.show_loading_message()
@@ -299,7 +318,7 @@ class ProfileWindow(QWidget):
                 self.close()
 
 
-    def login_window(self):
+    def open_login_window(self):
         from View.login_view import LoginWindow
         self.login_window = LoginWindow()
         self.login_window.show()

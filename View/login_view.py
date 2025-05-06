@@ -24,6 +24,9 @@ class ClickableLabel(QLabel):
     def mousePressEvent(self, event):
         self.clicked.emit()
 class LoginWindow(QWidget):
+    """
+    QWidget for Login View.
+    """
     def __init__(self):
         super().__init__()
 
@@ -245,9 +248,14 @@ class LoginWindow(QWidget):
 
 
     def login(self):
+        """
+        Log in user.
+        :return: None.
+        """
         username = self.username_input.text()
         password = self.password_input.text()
 
+        # If username and password are empty
         if not  username.strip() or not password.strip():
             msg = QMessageBox(self)
             msg.setWindowTitle("Missing Fields")
@@ -284,15 +292,16 @@ class LoginWindow(QWidget):
 
 
     def auth(self,password,username):
+        """
+        Authenticate user using username and password.
+        :param password: password input.
+        :param username: username input.
+        :return: None.
+        """
         loading = ui_controller.show_loading_message()
         QApplication.processEvents()
         username = self.username_input.text()
         password = self.password_input.text()
-
-        # if not username.strip() and not password.strip():
-        #     # QMessageBox warning (same as you already have)
-        #     ui_controller.show_popup("Acco")
-        #     return
 
         auth = authenticate_user(username, password)
         print(auth)
@@ -320,11 +329,19 @@ class LoginWindow(QWidget):
 
 
     def open_create_account_window(self):
+        """
+        Open create account window.
+        :return: None.
+        """
         self.create_window = CreateAccountWindow()
         self.create_window.show()
         self.close()
 
     def open_forgot_password_window(self):
+        """
+        Open forgot password window.
+        :return: None.
+        """
         self.forgot_window = ForgotPasswordWindow()
         self.forgot_window.show()
         self.close()

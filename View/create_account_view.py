@@ -12,6 +12,9 @@ import  controllers.ui_controller as ui_controller
 
 
 class CreateAccountWindow(QWidget):
+    """
+    QWidget for Create Account View.
+    """
     def __init__(self):
         super().__init__()
 
@@ -193,7 +196,7 @@ class CreateAccountWindow(QWidget):
                                         background-color: #e0e0e0;
                                     }
                                 """)
-        back_to_login_button.clicked.connect(self.login_window)
+        back_to_login_button.clicked.connect(self.open_login_window)
 
         back_to_login_layout = QHBoxLayout()
         back_to_login_layout.addStretch()
@@ -239,14 +242,23 @@ class CreateAccountWindow(QWidget):
 
         self.setLayout(main_layout)
 
-    def login_window(self):
+
+
+    def open_login_window(self):
+        """
+        Return to login window.
+        :return: None.
+        """
         from View.login_view import LoginWindow
         self.login_window = LoginWindow()
         self.login_window.show()
         self.close()
 
     def createAccount(self):
-
+        """
+        Create account.
+        :return: None.
+        """
         if not self.name_input.text() or not self.username_input.text() or not self.password_input.text() or not self.retype_password_input.text():
             ui_controller.show_popup("Please fill in all fields")
             return
@@ -258,7 +270,7 @@ class CreateAccountWindow(QWidget):
 
         if new_account.get_account(email) != "notfound":
             ui_controller.show_popup("Account already exists, please try to sign in.")
-            self.login_window()
+            self.open_login_window()
             return
 
 
@@ -270,7 +282,7 @@ class CreateAccountWindow(QWidget):
         accountCreated =new_account.add_account(name, email, password,key)
         if accountCreated:
             ui_controller.show_popup(f"Account created successfully.\n  Key: {key} (Use Key to retrieve password, Incase you lose your password)")
-            self.login_window()
+            self.open_login_window()
 
 
         else:
