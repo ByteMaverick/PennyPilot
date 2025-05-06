@@ -217,9 +217,8 @@ class LoginWindow(QWidget):
             line-height: 150%;
         """)
         terms_label.setText(
-            'By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.'
+            'PennyPilot — Track your income, expenses, and spending habits.\n© 2025 Mohammed & Alex. \nAll rights reserved'
         )
-        terms_label.setOpenExternalLinks(True)
 
         # Add widgets in correct order
         main_layout.setSpacing(6)
@@ -285,6 +284,8 @@ class LoginWindow(QWidget):
 
 
     def auth(self,password,username):
+        loading = ui_controller.show_loading_message()
+        QApplication.processEvents()
         username = self.username_input.text()
         password = self.password_input.text()
 
@@ -298,6 +299,7 @@ class LoginWindow(QWidget):
         if auth == "True":
             self.open_dashboard_window = Dashboard()
             self.open_dashboard_window.showFullScreen()
+            loading.close()
             self.close()
 
         elif auth == "False":
