@@ -22,7 +22,7 @@ def import_file(clear_existing=False, dev=False):
         path = "/Users/ansari/PycharmProjects/PennyPilot/View/assets/sample.csv"
     else:
 
-        ui_controller.show_popup(" The CSV file must have the following columns: Date, Description, Credit,Debit, Balance")
+        ui_controller.show_popup("Please open a CSV file. The CSV file must have the following columns: Date, Description, Credit,Debit, Balance")
         file_path, _ = QFileDialog.getOpenFileName(
             parent=None,
             caption="Open File",

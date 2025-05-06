@@ -2,6 +2,7 @@ from PyQt5.QtGui import QPixmap,QIcon
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from dao.account_dao import AccountDAO
+from dao.profile_dao import ProfileDAO
 
 
 def authenticate_user(username, password):
@@ -20,9 +21,24 @@ def retrieve_password(overrideKey):
     response = AccountDAO().get_account_by_password(overrideKey)
 
     if response != "notfound":
-        return show_popup(f" Your password is: {response}\n")
+        show_popup(f" Your password is: {response}\n")
+        return "True"
     else:
-        return show_popup("No account connected to the override key")
+        show_popup("No account connected to the override key")
+        return "False"
+
+
+def retrieve_name(email):
+    response = AccountDAO().get_name_by_email(email)
+    return response
+
+
+def retrieve_profile(email, number):
+    response = ProfileDAO().get_profile(email, number)
+    if (response != "notfound"):
+        return f"Profile {number}: {response}"
+    else:
+        return f"Create New Profile {number}"
 
 
 def show_popup(message):

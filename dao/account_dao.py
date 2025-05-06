@@ -76,3 +76,19 @@ class AccountDAO:
         finally:
             session.close()
 
+
+    def get_name_by_email(self, username):
+        session = self.session()
+
+        try:
+            account = session.query(Account).filter_by(email=username).one()
+            return account.name
+        except NoResultFound:
+            return "notfound"
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
+
