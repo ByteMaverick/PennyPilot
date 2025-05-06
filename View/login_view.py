@@ -9,6 +9,7 @@ import sys
 
 import  controllers.ui_controller as ui_controller
 from controllers.ui_controller import authenticate_user
+from create_account_view import CreateAccountWindow
 from forgot_password_view import ForgotPasswordWindow
 from dashboard_view import Dashboard
 
@@ -75,7 +76,7 @@ class LoginWindow(QWidget):
 
         # Username Input
         self.username_input = QLineEdit(self)
-        self.username_input.setPlaceholderText("Username")
+        self.username_input.setPlaceholderText("Email")
         self.username_input.setFixedSize(250, 40)
         self.username_input.setStyleSheet("""
                    QLineEdit {
@@ -246,7 +247,7 @@ class LoginWindow(QWidget):
         username = self.username_input.text()
         password = self.password_input.text()
 
-        if not  username.strip() and not password.strip():
+        if not  username.strip() or not password.strip():
             msg = QMessageBox(self)
             msg.setWindowTitle("Missing Fields")
             msg.setText("Username and Password are required.")
@@ -277,10 +278,8 @@ class LoginWindow(QWidget):
             msg.exec_()
             return
 
-        if self.auth(password,username):
-            self.open_dashboard_window = Dashboard()
-            self.open_dashboard_window.showFullScreen()
-            self.close()
+        self.auth(password,username)
+
 
 
     def auth(self,password,username):
@@ -289,27 +288,28 @@ class LoginWindow(QWidget):
         username = self.username_input.text()
         password = self.password_input.text()
 
-        if not username.strip() and not password.strip():
-            # QMessageBox warning (same as you already have)
-            ui_controller.show_popup("Acco")
-            return
+        # if not username.strip() and not password.strip():
+        #     # QMessageBox warning (same as you already have)
+        #     ui_controller.show_popup("Acco")
+        #     return
 
         auth = authenticate_user(username, password)
         print(auth)
+        # Password matches
         if auth == "True":
             self.open_dashboard_window = Dashboard()
             self.open_dashboard_window.showFullScreen()
             loading.close()
             self.close()
-
+        # Password does not match
         elif auth == "False":
+            ui_controller.show_popup("Password is incorrect")
+        # Account not found in database
+        else:
             ui_controller.show_popup("Account Not Found, Please Create New Account")
 
-        else:
-            ui_controller.show_popup("Password or username is incorrect")
 
     def open_create_account_window(self):
-        from create_account_view import CreateAccountWindow
         self.create_window = CreateAccountWindow()
         self.create_window.show()
         self.close()
@@ -317,6 +317,7 @@ class LoginWindow(QWidget):
     def open_forgot_password_window(self):
         self.forgot_window = ForgotPasswordWindow()
         self.forgot_window.show()
+        self.close()
 
 
 

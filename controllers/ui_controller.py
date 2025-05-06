@@ -20,9 +20,11 @@ def retrieve_password(overrideKey):
     response = AccountDAO().get_account_by_password(overrideKey)
 
     if response != "notfound":
-        return show_popup(f" Your password is: {response}\n")
+        show_popup(f" Your password is: {response}\n")
+        return "True"
     else:
-        return show_popup("No account connected to the override key")
+        show_popup("No account connected to the override key")
+        return "False"
 
 
 def show_popup(message):

@@ -175,6 +175,32 @@ class CreateAccountWindow(QWidget):
         line_layout.addWidget(line)
         line_layout.addStretch()
 
+
+        # Button to return to Login view
+        back_to_login_button = QPushButton("Back to Login")
+        back_to_login_button.setCursor(QCursor(Qt.PointingHandCursor))
+        back_to_login_button.setFixedSize(250, 40)
+        back_to_login_button.setStyleSheet("""
+                                    QPushButton {
+                                        background-color: #f0f0f0;
+                                        color: black;
+                                        border: none;
+                                        border-radius: 8px;
+                                        font-weight: bold;
+                                        font-size: 11pt;
+                                    }
+                                    QPushButton:hover {
+                                        background-color: #e0e0e0;
+                                    }
+                                """)
+        back_to_login_button.clicked.connect(self.login_window)
+
+        back_to_login_layout = QHBoxLayout()
+        back_to_login_layout.addStretch()
+        back_to_login_layout.addWidget(back_to_login_button)
+        back_to_login_layout.addStretch()
+
+
         # Footer
         # Terms and Conditions
         terms_label = QLabel("By clicking continue, you agree to our Terms of Service and Privacy Policy")
@@ -205,6 +231,8 @@ class CreateAccountWindow(QWidget):
         main_layout.addLayout(create_account_layout)
 
         main_layout.addLayout(line_layout)
+        main_layout.addSpacing(20)
+        main_layout.addLayout(back_to_login_layout)
 
         main_layout.addWidget(
             terms_label)
@@ -213,8 +241,9 @@ class CreateAccountWindow(QWidget):
 
     def login_window(self):
         from View.login_view import LoginWindow
-        login_window = LoginWindow()
-        login_window.show()
+        self.login_window = LoginWindow()
+        self.login_window.show()
+        self.close()
 
     def createAccount(self):
 
