@@ -6,7 +6,7 @@ from PyQt5.QtGui import QFont, QCursor
 from PyQt5.QtCore import Qt
 import sys
 
-
+import utils.extractor
 from dao.account_dao import AccountDAO
 import  controllers.ui_controller as ui_controller
 
@@ -189,9 +189,9 @@ class CreateAccountWindow(QWidget):
             line-height: 150%;
         """)
         terms_label.setText(
-            'By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.'
+            'PennyPilot — Track your income, expenses, and spending habits.\n© 2025 Mohammed & Alex. \nAll rights reserved'
         )
-        terms_label.setOpenExternalLinks(True)
+
 
         # Add widgets in correct order
         main_layout.setSpacing(6)
@@ -237,10 +237,10 @@ class CreateAccountWindow(QWidget):
             ui_controller.show_popup("Passwords didn't match, Try again.")
             return
 
-
-        accountCreated =new_account.add_account(name, email, password)
+        key =utils.extractor.generate_key()
+        accountCreated =new_account.add_account(name, email, password,key)
         if accountCreated:
-            ui_controller.show_popup("Account created successfully.")
+            ui_controller.show_popup(f"Account created successfully.\n  Key: {key} (Use Key to retrieve password, Incase you lose your password)")
             self.login_window()
 
 
