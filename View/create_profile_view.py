@@ -20,9 +20,10 @@ class CreateProfileWindow(QWidget):
         self.number = number
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(720, 450, 900, 700)
         self.setStyleSheet("background-color: white;")
-
+        # Centers the window to the screen
+        self.resize(900, 700)
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
 
         main_layout = QVBoxLayout()
 
