@@ -11,6 +11,15 @@ def month_extractor(date):
     match = re.search(pattern, date)
     return match.group(1)
 
+
+def is_email(email):
+    pattern =r"@"
+    find = re.findall(pattern, email)
+    if find:
+        return True
+
+    return False
+
 def generate_key():
     """
     Generate random key for overrideKey.
@@ -22,5 +31,6 @@ def generate_key():
         key += random.choice(keys)
 
     return key
+
 
 
