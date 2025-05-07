@@ -11,7 +11,6 @@ import  controllers.ui_controller as ui_controller
 from controllers.ui_controller import authenticate_user
 from create_account_view import CreateAccountWindow
 from forgot_password_view import ForgotPasswordWindow
-from dashboard_view import Dashboard
 from profile_view import ProfileWindow
 
 
@@ -31,9 +30,10 @@ class LoginWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(720, 450, 900, 700)
         self.setStyleSheet("background-color: white;")
-
+        # Centers the window to the screen
+        self.resize(900, 700)
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
 
         main_layout = QVBoxLayout()
 
@@ -257,34 +257,7 @@ class LoginWindow(QWidget):
 
         # If username and password are empty
         if not  username.strip() or not password.strip():
-            msg = QMessageBox(self)
-            msg.setWindowTitle("Missing Fields")
-            msg.setText("Username and Password are required.")
-            msg.setIcon(QMessageBox.Warning)
-
-            # Custom styling
-            msg.setStyleSheet("""
-                        QMessageBox {
-                            background-color: #white;
-                            font-family: Inter;
-                            font-size: 12pt;
-                        }
-                        QLabel {
-                            color: black;
-                        }
-                        QPushButton {
-                            background-color: #White;
-                            border: 1px solid #ccc;
-                            padding: 6px 12px;
-                            border-radius: 6px;
-                            min-width: 80px;
-                        }
-                        QPushButton:hover {
-                            background-color: #e0e0e0;
-                        }
-                    """)
-
-            msg.exec_()
+            ui_controller.show_popup("Username and Password are required.")
             return
 
         self.auth(password,username)
@@ -304,21 +277,22 @@ class LoginWindow(QWidget):
         password = self.password_input.text()
 
         auth = authenticate_user(username, password)
-        print(auth)
+
         # Password matches
         if auth == "True":
 
             try:
                 self.open_profile_window = ProfileWindow(email=username)
                 self.open_profile_window.show()
+                loading.close()
+                self.close()
                 # self.open_dashboard_window = Dashboard()
                 # self.open_dashboard_window.showFullScreen()
             except Exception as e:
                 # print(f"Error while opening dashboard: {e}")
                 print(f"Error while opening profiles: {e}")
-            finally:
                 loading.close()
-                self.close()
+
 
         # Password does not match
         elif auth == "False":
@@ -334,6 +308,7 @@ class LoginWindow(QWidget):
         :return: None.
         """
         self.create_window = CreateAccountWindow()
+        self.create_window.show()
         self.create_window.show()
         self.close()
 
