@@ -29,7 +29,10 @@ class ProfileWindow(QWidget):
         self.email = email
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(720, 450, 900, 700)
+        self.resize(900, 700)
+        # Centers the window to the screen
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
+
         self.setStyleSheet("background-color: white;")
 
 
@@ -266,6 +269,8 @@ class ProfileWindow(QWidget):
                 self.open_dashboard_window.showFullScreen()
             except Exception as e:
                 print(f"Error while opening dashboard: {e}")
+                self.open_profile_window = ProfileWindow(email=self.email)
+                self.open_profile_window.show()
             finally:
                 loading.close()
                 self.close()
@@ -290,6 +295,9 @@ class ProfileWindow(QWidget):
                 self.open_dashboard_window.showFullScreen()
             except Exception as e:
                 print(f"Error while opening dashboard: {e}")
+
+                self.open_profile_window = ProfileWindow(email=self.email)
+                self.open_profile_window.show()
             finally:
                 loading.close()
                 self.close()
@@ -313,6 +321,9 @@ class ProfileWindow(QWidget):
                 self.open_dashboard_window.showFullScreen()
             except Exception as e:
                 print(f"Error while opening dashboard: {e}")
+                self.open_profile_window = ProfileWindow(email=self.email)
+                self.open_profile_window.show()
+
             finally:
                 loading.close()
                 self.close()
