@@ -1,4 +1,4 @@
-# Team 7 Project Proposal
+# Team 7 Project README
 
 ## Project Title
 **PennyPilot**
