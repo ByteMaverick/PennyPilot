@@ -10,42 +10,58 @@ from dao.category_dao import CategoryDAO
 from dao.expense_dao import ExpenseDAO
 from dao.income_dao import IncomeDAO
 
-
-from utils import extractor
-
 from controllers import AiTools, ui_controller
 
 
-def import_file(clear_existing=False, dev=False):
+def import_file(clear_existing=False, dev=False,  profile_use= False):
     """
     Import data from csv file given by user.
     :param clear_existing: Boolean, whether to clear existing data.
     :param dev: Used for testing.
-    :return: None.
+    :param profile_use: Used as a flag, to accept both pdf and csv files.
+    :return: None or filepath.
     """
 
+    path = ""
     if dev:
         path = "/Users/ansari/PycharmProjects/PennyPilot/View/assets/sample.csv"
+    if profile_use:
+        ui_controller.show_popup(
+            "Please open a CSV file. The CSV file must have the following columns: Date, Description, Credit,Debit, Balance  or PDF Bankstatement")
+        file_path, _ = QFileDialog.getOpenFileName(
+            parent=None,
+            caption="Open File",
+            directory="",
+            filter="CSV or PDF Files (*.csv *.pdf);;CSV Files (*.csv);;PDF Files (*.pdf);;All Files (*)"
+        )
+        if file_path.lower().endswith('.csv'):
+            if not check_csv_structure(file_path):
+                return
+
+            path = file_path
+        elif file_path.lower().endswith('.pdf'):
+            import_bank_statement(file_path=file_path)
+            return file_path
+
+
+
     else:
-        # Show popup telling the user to open a CSV file
-        ui_controller.show_popup("Please open a CSV file. The CSV file must have the following columns: Date, Description, Credit,Debit, Balance")
+
+        ui_controller.show_popup(
+            "Please open a CSV file. The CSV file must have the following columns: Date, Description, Credit,Debit, Balance")
         file_path, _ = QFileDialog.getOpenFileName(
             parent=None,
             caption="Open File",
             directory="",
             filter="CSV Files (*.csv);;All Files (*)"
         )
-        if not file_path:
-            return
-        elif not check_csv_structure(file_path):
+        if not check_csv_structure(file_path):
             return
 
         path = file_path
 
-
     QApplication.processEvents()
 
-    # Clear existing data if specified by user
     if clear_existing:
         BankRecordsDAO().delete_all()
         BalanceDAO().delete_all()
@@ -53,7 +69,6 @@ def import_file(clear_existing=False, dev=False):
         IncomeDAO().delete_all()
         CategoryDAO().delete_all()
 
-    # Index data
     index_data(path)
 
 
@@ -200,20 +215,25 @@ def get_all_records_view():
     return df
 
 
-def import_bank_statement(clear_existing=False):
-    """
-    Read bank statement as PDF file.
-    :param clear_existing: Boolean, whether to clear existing values in database.
-    :return: None.
-    """
 
-    # Find file
-    file_path, _ = QFileDialog.getOpenFileName(
-        parent=None,
-        caption="Open File",
-        directory="",
-        filter="PDF Files (*.pdf);;All Files (*)"
-    )
+def import_bank_statement(clear_existing=False, profile_use = False, file_path= None):
+    """
+       Read bank statement as PDF file.
+       :param clear_existing: Boolean, whether to clear existing values in database.
+       :param profile_use: Used as a flag, to accept both pdf and csv files.
+       :param file_path: Path to the file, used with import_file() method.
+       :return: None.
+       """
+
+    # Locate File from System
+    if file_path is None:
+        file_path, _ = QFileDialog.getOpenFileName(
+            parent=None,
+            caption="Open File",
+            directory="",
+            filter="PDF Files (*.pdf);;All Files (*)"
+        )
+
 
     # File not found
     if not file_path:
@@ -247,7 +267,7 @@ def import_bank_statement(clear_existing=False):
             table_start_index = lines.index(data)
 
     for data in lines[table_start_index:]:
-
+        # Regex pattern to detect 2 kinds of formated data
         pattern = r"(\d{1,2}/\d{1,2}/\d{2,4})\s+(.+?)\s+(?:([\d,]+\.\d{2})\s+-\s+)?(?:-?\s*([\d,]+\.\d{2})\s+)?([\d,]+\.\d{2})"
         data = data.replace(",", "")
         match = re.match(pattern, data)
@@ -260,7 +280,6 @@ def import_bank_statement(clear_existing=False):
 
             df.loc[len(df)] = [date, desc, credit, debit, balance]
 
-    print(df)
     index_data(df,False)
 
 
