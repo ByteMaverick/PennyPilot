@@ -19,7 +19,8 @@ class CreateAccountWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(720, 450, 900, 700)
+        self.resize(900, 700)
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
         self.setStyleSheet("background-color: white;")
 
 
@@ -99,6 +100,7 @@ class CreateAccountWindow(QWidget):
         self.password_input = QLineEdit(self)
         self.password_input.setPlaceholderText("Password")
         self.password_input.setFixedSize(250, 40)
+        self.password_input.setEchoMode(QLineEdit.Password)
         self.password_input.setStyleSheet("""
                           QLineEdit {
                               border: 1px solid #ccc;
@@ -120,6 +122,7 @@ class CreateAccountWindow(QWidget):
         self.retype_password_input = QLineEdit(self)
         self.retype_password_input.setPlaceholderText("Re-Type Password")
         self.retype_password_input.setFixedSize(250, 40)
+        self.retype_password_input.setEchoMode(QLineEdit.Password)
         self.retype_password_input.setStyleSheet("""
                                   QLineEdit {
                                       border: 1px solid #ccc;
@@ -262,6 +265,11 @@ class CreateAccountWindow(QWidget):
         if not self.name_input.text() or not self.username_input.text() or not self.password_input.text() or not self.retype_password_input.text():
             ui_controller.show_popup("Please fill in all fields")
             return
+
+        if  not utils.extractor.is_email(self.username_input.text()):
+            ui_controller.show_popup("Enter a valid email address")
+            return
+
 
         name = self.name_input.text()
         email = self.username_input.text()
