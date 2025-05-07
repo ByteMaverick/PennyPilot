@@ -17,7 +17,9 @@ class ForgotPasswordWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(700, 500, 900, 700)
+        # Centers the window to the screen
+        self.resize(900, 700)
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
         self.setStyleSheet("background-color: white;")
 
 
