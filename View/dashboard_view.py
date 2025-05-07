@@ -32,9 +32,10 @@ class Dashboard(QWidget):
 
         self.clean_all()
         self.setWindowTitle("PennyPilot")
-        self.setGeometry(700, 500, 900, 700)
         self.setStyleSheet("background-color: white;")
-
+        # Centers the window to the screen
+        self.resize(1000, 900)
+        self.move(QApplication.primaryScreen().availableGeometry().center() - self.rect().center())
 
 
         main_layout = QVBoxLayout()
@@ -287,7 +288,7 @@ class Dashboard(QWidget):
 
         self.has_imported_once = False
         # Turn off dev
-        import_data.import_file(dev=False)  # Load the sample.csv when the app starts
+        import_data.import_file(dev=False, profile_use= True)  # Load the sample.csv when the app starts
 
         self.current_balance_label = QLabel(f"$ {dashboard_controller.current_balance(): 0.2f}")
         self.current_balance_label.setAlignment(Qt.AlignLeft)
@@ -475,27 +476,46 @@ class Dashboard(QWidget):
         # =================================================================
         # Dashboard View
         self.dashboard_layout = QVBoxLayout()
+
+        # Subtitle label (only once)
         dashboard_subtitle = QLabel("Main View")
         dashboard_subtitle.setAlignment(Qt.AlignLeft)
         dashboard_subtitle.setStyleSheet("""
-            color: #000;
-            font-family: Inter;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 150%;
-        """)
-        self.dashboard_layout.addWidget(subtitle)
-
-        # Generate histogram for total income by week
-        self.dashboard_layout.addWidget(visualization.histogram_income_by_week())
-        # Generate histogram for total expenses by week
-        self.dashboard_layout.addWidget(visualization.histogram_expenses_by_week())
-
-
-
+                    color: #000;
+                    font-family: Inter;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 150%;
+                """)
         self.dashboard_layout.addWidget(dashboard_subtitle)
 
+        # Graphs layout
+        self.graph_layout = QHBoxLayout()
+        self.history_layout = QVBoxLayout()
+
+        # Add income histogram
+        self.income_canvas = visualization.histogram_income_by_week()
+        if self.income_canvas:
+            self.history_layout.addWidget(self.income_canvas)
+
+        # Add expenses histogram
+        self.expenses_canvas = visualization.histogram_expenses_by_week()
+        if self.expenses_canvas:
+            self.history_layout.addWidget(self.expenses_canvas)
+
+        # Add the vertical layout of histograms to horizontal layout
+        self.graph_layout.addLayout(self.history_layout)
+
+        # Add pie chart
+        self.pie_canvas = visualization.pie_chart()
+        if self.pie_canvas:
+            self.graph_layout.addWidget(self.pie_canvas)
+
+
+
+        # Add graphs to main dashboard layout
+        self.dashboard_layout.addLayout(self.graph_layout)
 
         dashboard_widget = QWidget()
         dashboard_widget.setLayout(self.dashboard_layout)
@@ -612,7 +632,7 @@ class Dashboard(QWidget):
 
     def refresh_dashboard(self):
         """
-        Refresh dashboard text and labels.
+        Refresh dashboard text labels and Graphs.
         :return: None.
         """
         self.current_balance_label.setText(f"$ {dashboard_controller.current_balance(): 0.2f}")
@@ -626,6 +646,19 @@ class Dashboard(QWidget):
         self.income_label.setText(f"$ {income_data[1]: 0.2f}")
         self.income_desc_label.setText(dashboard_controller.money_made_compared_last_month())
 
+        # Remove old widgets
+        self.history_layout.removeWidget(self.income_canvas)
+        self.history_layout.removeWidget(self.expenses_canvas)
+        self.graph_layout.removeWidget(self.pie_canvas)
+
+        # Add new widgets
+        self.income_canvas = visualization.histogram_income_by_week()
+        self.expenses_canvas = visualization.histogram_expenses_by_week()
+        self.pie_canvas = visualization.pie_chart()
+
+        self.history_layout.addWidget(self.income_canvas)
+        self.history_layout.addWidget(self.expenses_canvas)
+        self.graph_layout.addWidget(self.pie_canvas)
 
     def import_data(self, isCSV = True ):
         """
@@ -693,6 +726,6 @@ class Dashboard(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Dashboard()
-    #window.showFullScreen()
+    window.showFullScreen()
     window.show()
     sys.exit(app.exec_())
