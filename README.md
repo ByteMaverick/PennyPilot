@@ -21,7 +21,7 @@
 
 ## Setup and Execution Instructions
 1. Clone this repo with this command: "git clone https://github.com/ByteMaverick/PennyPilot.git"
-2. In the project root directory, do "pip -r requirements.txt"
+2. In the project root directory, do "pip install -r requirements.txt"
 3. Open this project in PyCharm
 4. Run View\main.py in PyCharm
 5. If any dependencies are still missing, check imports at top of each .py file and install them with PyCharm
