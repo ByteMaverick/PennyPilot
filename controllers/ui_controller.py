@@ -68,7 +68,7 @@ def retrieve_profile(email, number):
 
 
 
-def show_popup(message):
+def show_popup(message, ok_button = True):
     """
     Shows a popup upon user input depending on message.
     :param message: Message to be displayed in popup.
@@ -78,7 +78,29 @@ def show_popup(message):
     msg.setWindowTitle("Pop-up Title")
     msg.setText(message)
     msg.setIcon(QMessageBox.Information)
-    msg.setStandardButtons(QMessageBox.Ok)
+    msg.setStyleSheet("""
+                            QMessageBox {
+                                background-color: #f5f0f0;
+                                font-family: Inter;
+                                font-size: 12pt;
+                            }
+                            QLabel {
+                                color: black;
+                            }
+                            QPushButton {
+                                background-color: #050505;
+                                border: 1px solid #ccc;
+                                padding: 6px 12px;
+                                border-radius: 6px;
+                                min-width: 80px;
+                            }
+                            QPushButton:hover {
+                                background-color: #e0e0e0;
+                            }
+                        """)
+
+    if ok_button:
+        msg.setStandardButtons(QMessageBox.Ok)
     result = msg.exec_()
 
 
