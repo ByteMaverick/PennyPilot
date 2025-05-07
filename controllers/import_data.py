@@ -35,6 +35,8 @@ def import_file(clear_existing=False, dev=False,  profile_use= False):
             filter="CSV or PDF Files (*.csv *.pdf);;CSV Files (*.csv);;PDF Files (*.pdf);;All Files (*)"
         )
         if file_path.lower().endswith('.csv'):
+            if not file_path:
+                return
             if not check_csv_structure(file_path):
                 return
 
@@ -55,6 +57,8 @@ def import_file(clear_existing=False, dev=False,  profile_use= False):
             directory="",
             filter="CSV Files (*.csv);;All Files (*)"
         )
+        if not file_path:
+            return
         if not check_csv_structure(file_path):
             return
 
@@ -296,6 +300,7 @@ def check_csv_structure(file, isCSV=True):
 
     # Read CSV if isCSV is True
     if isCSV:
+
         df = pd.read_csv(file)
 
     # Check shape of DF
