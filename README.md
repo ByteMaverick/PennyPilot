@@ -25,4 +25,5 @@
 3. Open this project in PyCharm
 4. Run View\main.py in PyCharm
 5. If any dependencies still missing, check imports at top of each .py file and install them with PyCharm
+6. When using the app, once prompted to open a CSV file after opening a profile, go to assets/ folder for example files to load.
 
