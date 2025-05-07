@@ -155,7 +155,7 @@ def money_made_compared_last_month():
 
     else:
         percentage = difference / last_month_income * 100
-        return  f"Made {percentage: 0.2f} % less money compared to last month"
+        return  f"Made {abs(percentage): 0.2f} % less money compared to last month"
 
 
 
