@@ -2,6 +2,7 @@ from controllers.import_data import get_all_incomes, get_all_expenses
 import pandas as pd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from dao.category_dao import CategoryDAO
 
 
 def histogram_income_by_week():
@@ -23,7 +24,7 @@ def histogram_income_by_week():
     # Create histogram using matplotlib
     fig = Figure(figsize=(6,4))
     ax = fig.add_subplot(111)
-    ax.bar(weekly_income['week'].astype(str), weekly_income['amount'])
+    ax.bar(weekly_income['week'].astype(str), weekly_income['amount'],color ='black')
     ax.set_title('Income by Week')
     ax.set_xlabel('Week')
     ax.set_ylabel('Income')
@@ -50,7 +51,7 @@ def histogram_expenses_by_week():
     # Create histogram using matplotlib
     fig = Figure(figsize=(6, 4))
     ax = fig.add_subplot(111)
-    ax.bar(weekly_expenses['week'].astype(str), weekly_expenses['amount'])
+    ax.bar(weekly_expenses['week'].astype(str), weekly_expenses['amount'],color ='black')
     ax.set_title('Expenses by Week')
     ax.set_xlabel('Week')
     ax.set_ylabel('Expenses')
@@ -58,6 +59,31 @@ def histogram_expenses_by_week():
 
     return FigureCanvas(fig)
 
+
+def pie_chart():
+    """
+    Retrieves all the categories data from the database, creating a pie chart for Categorical Distribution.
+    :return: FigureCanvas containing the pie chart.
+    """
+    data = CategoryDAO().get_user_categories()
+    records = [{"name": category.name} for category in data]
+    df = pd.DataFrame(records)
+
+    if df.empty:
+        print("No categories available.")
+        return None
+
+    counts = df["name"].value_counts()
+    labels = counts.index.tolist()
+    sizes = counts.values.tolist()
+
+
+    fig = Figure(figsize=(5, 5))
+    ax = fig.add_subplot(111)
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+    ax.set_title("Categorical Distribution")
+
+    return FigureCanvas(fig)
 
 
 
