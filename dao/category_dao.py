@@ -32,16 +32,15 @@ class CategoryDAO:
             session.close()
 
 
-    def get_user_categories(self, account_id):
+    def get_user_categories(self):
         """
         Get a user's categories from the database.
-        :param account_id: ID of a user's account.
-        :return: Categories of a user's account.
+        :return: All Categories data of a user.
         """
         session = self.session()
         try:
-            user_categories = session.query(Category).filter_by(account_id = account_id).all()
-            return user_categories
+            categories = session.query(Category).all()
+            return categories
         except Exception as e:
             session.rollback()
             raise e
