@@ -19,7 +19,7 @@
 - sqlalchemy
 - torch
 
-### Setup and Execution Instructions
+## Setup and Execution Instructions
 1. Clone this repo with this command: "git clone https://github.com/ByteMaverick/PennyPilot.git"
 2. In the project root directory, do "pip -r requirements.txt"
 3. Open this project in PyCharm
@@ -28,7 +28,7 @@
 6. If there is an error about missing torch, do "pip3 install torch torchvision torchaudio"
 7. When using the app, once prompted to open a CSV file after opening a profile, go to assets/ folder for example files to load.
 
-### File Structure Overview
+## File Structure Overview
 **View folder**
 - assets\ - folder with sample CSV and PDF files to import into the application
 - main.py - Entry point of applicaiton
@@ -48,5 +48,5 @@
 - __init__.py - recognize this folder as a package
 - extractor.py - tools to extract month and keys
 
-### Known Bugs or Limitations
+## Known Bugs or Limitations
 None
